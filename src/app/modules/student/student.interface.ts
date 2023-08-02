@@ -1,22 +1,12 @@
 import { Model, Types } from 'mongoose';
+
+import { IBloodGroup } from '../../../interfaces/bloodgroup';
+import { IGender } from '../../../interfaces/gender';
+import { IUserName } from '../../../interfaces/userName';
 import { IAcademicDepartment } from '../academicDepartment/academicDepartment.interface';
 import { IAcademicFaculty } from '../academicFaculty/academicFaculty.interface';
 import { IAcademicSemester } from '../academicSemester/academicSemester.interface';
-export type UserName = {
-  firstName: string;
-  middleName: string;
-  lastName: string;
-};
-export type Gender = 'Male' | 'Female';
-export type BloodGroup =
-  | 'A+'
-  | 'A-'
-  | 'B+'
-  | 'B-'
-  | 'AB+'
-  | 'AB-'
-  | 'O+'
-  | 'O-';
+
 export type Guardian = {
   fatherName: string;
   fatherOccupation: string;
@@ -34,13 +24,13 @@ export type LocalGuardian = {
 };
 export type IStudent = {
   id: string;
-  name: UserName;
-  gender: Gender;
+  name: IUserName;
+  gender: IGender;
   dateOfBirth: string;
   email: string;
   contactNo: string;
   emergencyContactNo: string;
-  bloodGroup: BloodGroup;
+  bloodGroup: IBloodGroup;
   presentAddress: string;
   permanentAddress: string;
   guardian: Guardian;
@@ -52,4 +42,11 @@ export type IStudent = {
 };
 
 export type StudentModel = Model<IStudent, Record<string, unknown>>;
-export type IStudentFilters = { searchTerm?: string };
+export type IStudentFilters = {
+  searchTerm?: string;
+  id?: string;
+  bloodGroup?: string;
+  email?: string;
+  contactNo?: string;
+  emergencyContactNo?: string;
+};

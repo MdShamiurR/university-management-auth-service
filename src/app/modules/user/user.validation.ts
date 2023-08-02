@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { bloodGroup, gender } from '../student/student.constant';
+import { bloodGroup } from '../../../constants/bloodGroup';
+import { gender } from '../../../constants/gender';
 
 // req- validation
 // body-->object  (id,role,password)
@@ -94,5 +95,62 @@ const createUserZodSchema = z.object({
     }),
   }),
 });
+const createFacultyZodSchema = z.object({
+  body: z.object({
+    password: z.string().optional(),
+    faculty: z.object({
+      name: z.object({
+        firstName: z.string({
+          required_error: 'First Name is required',
+        }),
+        middleName: z.string().optional(),
+        lastName: z.string({
+          required_error: 'Last Name is required',
+        }),
+      }),
+      dateOfBirth: z.string({
+        required_error: 'Date of birth is Required',
+      }),
+      gender: z.enum([...gender] as [string, ...string[]], {
+        required_error: 'Gender is Required',
+      }),
+      bloodGroup: z.enum([...bloodGroup] as [string, ...string[]], {
+        required_error: 'Blood Group is Required',
+      }),
+      email: z
+        .string({
+          required_error: 'Email is Required',
+        })
+        .email(),
+      contactNo: z.string({
+        required_error: 'ContactNo is Required',
+      }),
+      designation: z.string({
+        required_error: 'Designation is required',
+      }),
+      emergencyContactNo: z.string({
+        required_error: 'Emergency ContactNo is Required',
+      }),
+      presentAddress: z.string({
+        required_error: 'Present Address ContactNo is Required',
+      }),
+      permanentAddress: z.string({
+        required_error: 'Permanent Address ContactNo is Required',
+      }),
+      academicFaculty: z.string({
+        required_error: 'Academic Faculty is Required',
+      }),
+      academicDepartment: z.string({
+        required_error: 'Academic Department is Required',
+      }),
 
-export const userValidation = { createUserZodSchema };
+      profileImage: z
+        .string({
+          required_error: 'Profile Image is Required',
+        })
+        .optional(),
+    }),
+  }),
+});
+
+export const userValidation = { createUserZodSchema, createFacultyZodSchema };

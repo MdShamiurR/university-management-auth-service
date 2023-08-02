@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
-import { bloodGroup, gender } from './student.constant';
+
+import { bloodGroup } from '../../../constants/bloodGroup';
+import { gender } from '../../../constants/gender';
 import { IStudent, StudentModel } from './student.interface';
 
 export const studentSchema = new Schema<IStudent, StudentModel>(
@@ -24,6 +26,7 @@ export const studentSchema = new Schema<IStudent, StudentModel>(
           required: true,
         },
       },
+      required: true,
     },
     gender: {
       type: String,

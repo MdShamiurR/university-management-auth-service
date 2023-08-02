@@ -29,7 +29,7 @@ const getAllStudents = catchAsync(async (req: Request, res: Response) => {
 
 const getSingleStudent = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
-  // console.log('this is id from get semester', id);
+  console.log('this is single id', id);
   const result = await StudentService.getSingleStudent(id);
   // console.log('this is result data 2', result);
 
@@ -43,7 +43,7 @@ const getSingleStudent = catchAsync(async (req: Request, res: Response) => {
 
 const updateStudent = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
-  // console.log('thisa is id', id);
+  console.log('this is pdated id', id);
 
   const updatedData = req.body;
   // console.log('thisa is', update);

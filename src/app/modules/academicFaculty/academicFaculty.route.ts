@@ -20,4 +20,4 @@ router.patch(
 router.get('/', academicFacultyController.getAllFaculty);
 router.delete('/:id', academicFacultyController.deleteFaculty);
 
-export const academicFacultyRoutes = router;
+export const AcademicFacultyRoutes = router;
