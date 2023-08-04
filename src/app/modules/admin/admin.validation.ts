@@ -6,7 +6,7 @@ import { gender } from '../../../constants/gender';
 // body-->object  (id,role,password)
 //  data -->object
 
-const updateStudentZodSchema = z.object({
+const updateAdminZodSchema = z.object({
   body: z.object({
     name: z
       .object({
@@ -23,30 +23,11 @@ const updateStudentZodSchema = z.object({
     emergencyContactNo: z.string().optional(),
     presentAddress: z.string().optional(),
     permanentAddress: z.string().optional(),
-    academicFaculty: z.string().optional(),
-    academicDepartment: z.string().optional(),
-    academicSemester: z.string().optional(),
-    guardian: z
-      .object({
-        fatherName: z.string().optional(),
-        fatherOccupation: z.string().optional(),
-        fatherContactNo: z.string().optional(),
-        motherName: z.string().optional(),
-        motherOccupation: z.string().optional(),
-        motherContactNo: z.string().optional(),
-        address: z.string().optional(),
-      })
-      .optional(),
-    localGuardian: z
-      .object({
-        name: z.string().optional(),
-        occupation: z.string().optional(),
-        contactNo: z.string().optional(),
-        address: z.string().optional(),
-      })
-      .optional(),
+    designation: z.string().optional(),
+
+    managementDepartment: z.string().optional(),
     profileImage: z.string().optional(),
   }),
 });
 
-export const StudentValidation = { updateStudentZodSchema };
+export const AdminValidation = { updateAdminZodSchema };

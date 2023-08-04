@@ -4,15 +4,14 @@ import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
-import { IStudent } from '../student/student.interface';
-import { facultySearchableFileds } from './faculty.constant';
-import { IFaculty, IFacultyFilters } from './faculty.interface';
-import { Faculty } from './faculty.model';
+import { adminSearchableFileds } from './admin.constant';
+import { IAdmin, IAdminFilters } from './admin.interface';
+import { Admin } from './admin.model';
 
-const getAllFaculties = async (
-  filters: IFacultyFilters,
+const getAllAdmins = async (
+  filters: IAdminFilters,
   paginationOptions: IPaginationOptions
-): Promise<IGenericResponse<IFaculty[]>> => {
+): Promise<IGenericResponse<IAdmin[]>> => {
   const { searchTerm, ...filtersData } = filters;
 
   // console.log('this is fil', filtersData);
@@ -20,7 +19,7 @@ const getAllFaculties = async (
   const andConditions = [];
   if (searchTerm) {
     andConditions.push({
-      $or: facultySearchableFileds.map(field => ({
+      $or: adminSearchableFileds.map(field => ({
         [field]: { $regex: searchTerm, $options: 'i' },
       })),
     });
@@ -44,15 +43,14 @@ const getAllFaculties = async (
   const whereConditions =
     andConditions.length > 0 ? { $and: andConditions } : {};
 
-  const result = await Faculty.find(whereConditions)
+  const result = await Admin.find(whereConditions)
 
-    .populate('academicDepartment')
-    .populate('academicFaculty')
+    .populate('managementDepartment')
     .sort(sortCondition)
     .skip(skip)
     .limit(limit);
 
-  const total = await Faculty.countDocuments(whereConditions);
+  const total = await Admin.countDocuments(whereConditions);
   return {
     meta: {
       page,
@@ -63,50 +61,49 @@ const getAllFaculties = async (
   };
 };
 
-const getSingleFaculty = async (id: string): Promise<IFaculty | null> => {
-  const result = await Faculty.findById(id)
-    .populate('academicDepartment')
-    .populate('academicFaculty');
+const getSingleAdmin = async (id: string): Promise<IAdmin | null> => {
+  const result = await Admin.findById(id).populate('managementDepartment');
+
   // console.log(id);
   return result;
 };
-const updateFaculty = async (
+const updateAdmin = async (
   id: string,
-  payload: Partial<IFaculty>
-): Promise<IFaculty | null> => {
+  payload: Partial<IAdmin>
+): Promise<IAdmin | null> => {
   // console.log('this is id', id);
-  const isExist = await Faculty.findOne({ id });
+  const isExist = await Admin.findOne({ id });
   if (!isExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Faculty not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Admin not found');
   }
   //for embrdded Fields
-  const { name, ...facultyData } = payload;
-  const updatedFacultyData: Partial<IStudent> = { ...facultyData };
+  const { name, ...adminData } = payload;
+  const updatedAdminData: Partial<IAdmin> = { ...adminData };
 
   if (name && Object.keys(name).length > 0) {
     Object.keys(name).forEach(key => {
       const nameKey = `name.${key}`;
-      (updatedFacultyData as any)[nameKey] = name[key as keyof typeof name];
+      (updatedAdminData as any)[nameKey] = name[key as keyof typeof name];
     });
   }
 
-  const result = await Faculty.findOneAndUpdate({ id }, updatedFacultyData, {
+  const result = await Admin.findOneAndUpdate({ id }, updatedAdminData, {
     new: true,
   });
 
   return result;
 };
-const deleteFaculty = async (id: string): Promise<IFaculty | null> => {
-  const result = await Faculty.findByIdAndDelete(id)
-    .populate('academicDepartment')
-    .populate('academicFaculty');
+const deleteAdmin = async (id: string): Promise<IAdmin | null> => {
+  const result = await Admin.findByIdAndDelete(id).populate(
+    'managementDepartment'
+  );
 
   return result;
 };
 
-export const FacultyService = {
-  getAllFaculties,
-  getSingleFaculty,
-  updateFaculty,
-  deleteFaculty,
+export const AdminService = {
+  getAllAdmins,
+  getSingleAdmin,
+  updateAdmin,
+  deleteAdmin,
 };

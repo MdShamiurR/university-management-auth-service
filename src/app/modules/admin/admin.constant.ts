@@ -1,4 +1,4 @@
-export const facultySearchableFileds = [
+export const adminSearchableFileds = [
   'id',
   'email',
   'contactNo',
@@ -8,7 +8,7 @@ export const facultySearchableFileds = [
   'bloodGroup',
   'emergencyContactNo',
 ];
-export const facultyFilterableFileds = [
+export const adminFilterableFileds = [
   'searchTerm',
   'id',
   'bloodGroup',
