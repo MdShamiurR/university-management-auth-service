@@ -11,7 +11,7 @@ import { UserService } from './user.service';
 const createStudent: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const { student, ...userData } = req.body;
-    // console.log('this is user', userData.password);
+    console.log(req.cookies, 'this is cookie');
 
     const result = await UserService.createStudent(student, userData);
 

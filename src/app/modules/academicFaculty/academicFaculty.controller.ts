@@ -22,6 +22,8 @@ const createFaculty = catchAsync(async (req: Request, res: Response) => {
   });
 });
 const getAllFaculty = catchAsync(async (req: Request, res: Response) => {
+  console.log('this is authorization', req.headers.authorization);
+  console.log('this is requestBody', req.user);
   // const paginationOptions = {
   //   page: req.query.page,
   //   limit: req.query.limit,

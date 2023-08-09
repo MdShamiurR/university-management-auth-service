@@ -27,6 +27,7 @@ const createSemester = catchAsync(async (req: Request, res: Response) => {
 const getAllSemesters = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, academicSemesterFilterableFileds);
   const paginationOptions = pick(req.query, paginationFields);
+  // console.log(req.cookies, 'cookies testing');
 
   const result = await AcademicSemesterService.getAllSemesters(
     filters,
