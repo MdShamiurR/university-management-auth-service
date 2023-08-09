@@ -1,10 +1,12 @@
+import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
-import { Secret } from 'jsonwebtoken';
+import { JwtPayload, Secret } from 'jsonwebtoken';
 import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
 import { JwtHelpers } from '../../../helpers/jwtHelpers';
 import { User } from '../user/user.model';
 import {
+  IChangePassword,
   ILoginUser,
   ILoginUserResponse,
   IRefreshTokenResponse,
@@ -33,7 +35,7 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   // );
   if (
     isUserExist.password &&
-    !user.isPasswordMatched(password, isUserExist?.password)
+    !(await user.isPasswordMatched(password, isUserExist.password))
   ) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'password is incorrect');
   }
@@ -112,7 +114,52 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
   };
 };
 
+const changePassword = async (
+  user: JwtPayload | null,
+  passwordData: IChangePassword
+): Promise<void> => {
+  const { oldPassword, newPassword } = passwordData;
+  // const { userId } = user;
+
+  //checking user existance
+  const MyUser = new User();
+  const isUserExist = await MyUser.isUserExist(user?.userId);
+
+  if (!isUserExist) {
+    throw new ApiError(
+      httpStatus.NOT_FOUND,
+      'This User is not in our database'
+    );
+  }
+  //checking old password
+  if (
+    isUserExist.password &&
+    !(await MyUser.isPasswordMatched(oldPassword, isUserExist.password))
+  ) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Old Password is not Correct');
+  }
+
+  // const user = new User();
+  //access to our instance methods
+  // const isUserExist = await user.isUserExist(id);
+
+  //hash password before saving
+  const hashPassword = await bcrypt.hash(
+    newPassword,
+    Number(config.bcrypt_salt_rounds)
+  );
+  const updatedData = {
+    password: hashPassword,
+    needsPasswordChange: false,
+    passwordChangedAt: new Date(),
+  };
+
+  //update Password
+  await User.findOneAndUpdate({ id: user?.userId }, updatedData);
+};
+
 export const AuthService = {
   loginUser,
   refreshToken,
+  changePassword,
 };
