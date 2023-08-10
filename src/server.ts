@@ -13,6 +13,7 @@ let server: Server;
 async function boostrap() {
   try {
     await mongoose.connect(config.database_url as string);
+
     logger.info(`Database is connected  successfully`);
 
     server = app.listen(config.port, () => {
