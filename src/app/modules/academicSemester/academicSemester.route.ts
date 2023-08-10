@@ -1,4 +1,6 @@
 import express from 'express';
+import { ENUM_USER_ROLE } from '../../../enums/user';
+import auth from '../../middlewares/auth';
 import validateRequest from '../../middlewares/validateRequest';
 import { AcademicSemesterController } from './academicSemester.controller';
 import { AcademicSemesterValidation } from './academicSemester.validation';
@@ -19,7 +21,11 @@ router.patch(
   AcademicSemesterController.updateSemester
 );
 
-router.get('/', AcademicSemesterController.getAllSemesters);
+router.get(
+  '/',
+  auth(ENUM_USER_ROLE.STUDENT),
+  AcademicSemesterController.getAllSemesters
+);
 
 router.delete('/:id', AcademicSemesterController.deleteSemester);
 

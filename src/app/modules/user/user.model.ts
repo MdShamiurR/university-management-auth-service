@@ -53,13 +53,19 @@ userSchema.methods.isPasswordMatched = async function (
 ): Promise<boolean> {
   return await bcrypt.compare(givenPassword, savedPassword);
 };
-
+//User.create()/user.save
 userSchema.pre('save', async function (next) {
   const user = this;
   user.password = await bcrypt.hash(
     user.password,
     Number(config.bcrypt_salt_rounds)
   );
+  ////alternative
+  if (!user.needsPasswordChange) {
+    //upore needsPasswordChange= true so ! use hoyse module:19-4
+    user.passwordChangedAt = new Date();
+  }
+  ////alternative
   next();
 });
 export const User = model<IUser, UserModel>('User', userSchema);

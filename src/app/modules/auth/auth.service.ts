@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
 import { JwtPayload, Secret } from 'jsonwebtoken';
 import config from '../../../config';
@@ -118,12 +117,19 @@ const changePassword = async (
   user: JwtPayload | null,
   passwordData: IChangePassword
 ): Promise<void> => {
+  // eslint-disable-next-line no-unused-vars
   const { oldPassword, newPassword } = passwordData;
-  // const { userId } = user;
 
-  //checking user existance
+  // //checking user existance
+  // const MyUser = new User();
+  // const isUserExist = await MyUser.isUserExist(user?.userId);
+
+  //alternative of checking user existance
   const MyUser = new User();
-  const isUserExist = await MyUser.isUserExist(user?.userId);
+  const isUserExist = await User.findOne({ id: user?.userId }).select(
+    '+password'
+  );
+  console.log(isUserExist);
 
   if (!isUserExist) {
     throw new ApiError(
@@ -139,23 +145,25 @@ const changePassword = async (
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Old Password is not Correct');
   }
 
-  // const user = new User();
-  //access to our instance methods
-  // const isUserExist = await user.isUserExist(id);
+  // //hash password before saving
+  // const hashPassword = await bcrypt.hash(
+  //   newPassword,
+  //   Number(config.bcrypt_salt_rounds)
+  // );
+  // const updatedData = {
+  //   password: hashPassword,
+  //   needsPasswordChange: false,
+  //   passwordChangedAt: new Date(),
+  // };
+  // //update Password
+  // await User.findOneAndUpdate({ id: user?.userId }, updatedData);
 
-  //hash password before saving
-  const hashPassword = await bcrypt.hash(
-    newPassword,
-    Number(config.bcrypt_salt_rounds)
-  );
-  const updatedData = {
-    password: hashPassword,
-    needsPasswordChange: false,
-    passwordChangedAt: new Date(),
-  };
+  ////alternative of hashPassword
+  // data update
+  isUserExist.needsPasswordChange = false;
 
-  //update Password
-  await User.findOneAndUpdate({ id: user?.userId }, updatedData);
+  // updateing uuinsg save
+  isUserExist.save(); //userSchema.pre('save', async function (next) {
 };
 
 export const AuthService = {
