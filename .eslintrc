@@ -36,12 +36,29 @@
     "prettier"
   ],
   "rules": {
-    "@typescript-eslint/no-unused-vars": "error",
+    "no-unused-vars": "error",
     "no-console": "warn",
-    "@typescript-eslint/consistent-type-definitions": ["error", "type"]
+    "no-undef": "error",
+    "no-unused-expressions": "error",
+    "no-unreachable": "error",
+    "@typescript-eslint/consistent-type-definitions": ["error", "type"],
+    "@typescript-eslint/explicit-function-return-type": "warn"
   },
   "env": {
     "browser": true,
-    "es2021": true
+    "es2021": true,
+    "node": true
+  },
+  "globals": {
+    "process": "readonly"
   }
 }
+
+/*"env": {
+  "browser": true,
+  "es2021": true,
+  "node": true
+},
+"globals": {
+  "process": "readonly"
+} */
